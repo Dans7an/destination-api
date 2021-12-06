@@ -11,7 +11,7 @@ app.use(express.static("public"));
 // app.use(express.urlencoded())
 
 // Port or Address
-app.listen(4000);
+app.listen(process.env.PORT || 4000);
 
 app.get("/", function (req, res) {
   res.render("index.ejs", { destinations });
