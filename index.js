@@ -1,6 +1,5 @@
 const express = require("express");
 const server = express();
-
 const fetch = require("node-fetch");
 const { redirect } = require("statuses");
 let { destinations } = require("./db");
@@ -8,9 +7,8 @@ const cors = require('cors');
 const { generateUniqueId } = require("./services");
 
 server.use(cors())
-
 server.use(express.json());
-// server.use(express.urlencoded())
+server.use(express.urlencoded())
 
 server.listen(process.env.PORT || 3000);
 
