@@ -21,20 +21,20 @@ app.get("/destinations", (req, res) => {
   res.render("index.ejs", { destinations });
 });
 
-function fetchReq(name, location){
-  try {
-    const API_KEY = "";
-    const UNSPLASH_URL = `https://api.unsplash.com/photos/random?client_id=wQuC3g7JmlN_8yTfq4Hk9247zZRTDzpaZSQyE1b32bE&q=${name} ${location}`;
+// function fetchReq(name, location){
+//   try {
+//     const API_KEY = "";
+//     const UNSPLASH_URL = `https://api.unsplash.com/photos/random?client_id=wQuC3g7JmlN_8yTfq4Hk9247zZRTDzpaZSQyE1b32bE&q=${name} ${location}`;
 
-    const fetchRes = await fetch(UNSPLASH_URL);
-    const data = await fetchRes.json();
-    dest.photo = data.urls.small;
-  } catch (error) {
-    dest.photo =
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80";
-  }
+//     const fetchRes = await fetch(UNSPLASH_URL);
+//     const data = await fetchRes.json();
+//     dest.photo = data.urls.small;
+//   } catch (error) {
+//     dest.photo =
+//       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80";
+//   }
 
-}
+// }
 
 app.post("/destinations", async (req, res) => {
   const { name, location, description } = req.body;
