@@ -5,7 +5,7 @@ let { destinations } = require("./db");
 const cors = require('cors');
 const { generateUniqueId } = require("./services");
 
-app.use(cors())
+server.use(cors())
 
 const server = express();
 server.use(express.json());
