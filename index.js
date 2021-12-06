@@ -1,4 +1,6 @@
 const express = require("express");
+const server = express();
+
 const fetch = require("node-fetch");
 const { redirect } = require("statuses");
 let { destinations } = require("./db");
@@ -7,7 +9,6 @@ const { generateUniqueId } = require("./services");
 
 server.use(cors())
 
-const server = express();
 server.use(express.json());
 // server.use(express.urlencoded())
 
