@@ -17,7 +17,7 @@ server.listen(process.env.PORT || 3000);
 // POST => create destinations
 // data => {name^, location^, photo, description}
 server.post("/destinations", async (req, res) => {
-  const { name, location, photo, description } = req.body;
+  const { name, location, description } = req.body;
 
   // Make sure we have a name AND location
   if (
@@ -33,12 +33,17 @@ server.post("/destinations", async (req, res) => {
 
   const dest = { id: generateUniqueId(), name, location };
 
-  const UNSPLASH_URL = `https://api.unsplash.com/photos/random?client_id=ZUAPn3ODLz7xSJEa_kQZY4B2kfKSccXz6f3jBytjcGE&q=${name} ${location}`;
+  try {
+    const API_KEY = "";
+    const UNSPLASH_URL = `https://api.unsplash.com/photos/random?client_id=wQuC3g7JmlN_8yTfq4Hk9247zZRTDzpaZSQyE1b32bE&q=${name} ${location}`;
 
-  const fetchRes = await fetch(UNSPLASH_URL);
-  const data = await fetchRes.json();
-
-  dest.photo = data.urls.small;
+    const fetchRes = await fetch(UNSPLASH_URL);
+    const data = await fetchRes.json();
+    dest.photo = data.urls.small;
+  } catch (error) {
+    dest.photo =
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80";
+  }
 
   if (description && description.length !== 0) {
     dest.description = description;
