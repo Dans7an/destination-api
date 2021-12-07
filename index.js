@@ -1,14 +1,12 @@
 const express = require("express");
 const server = express();
-const fetch = require("node-fetch");
-const { redirect } = require("statuses");
 let { destinations } = require("./db");
 const cors = require('cors');
-const { generateUniqueId } = require("./services");
+const { generateUniqueId, getUnsplahPhoto } = require("./services");
 
 server.use(cors())
 server.use(express.json());
-server.use(express.urlencoded())
+server.use(express.urlencoded({extended: true}))
 
 server.listen(process.env.PORT || 3000);
 
@@ -30,18 +28,19 @@ server.post("/destinations", async (req, res) => {
   }
 
   const dest = { id: generateUniqueId(), name, location };
+  dest.photo = await getUnsplahPhoto({name,location})
 
-  try {
-    const API_KEY = "";
-    const UNSPLASH_URL = `https://api.unsplash.com/photos/random?client_id=wQuC3g7JmlN_8yTfq4Hk9247zZRTDzpaZSQyE1b32bE&q=${name} ${location}`;
+  // try {
+  //   const API_KEY = "";
+  //   const UNSPLASH_URL = `https://api.unsplash.com/photos/random?client_id=wQuC3g7JmlN_8yTfq4Hk9247zZRTDzpaZSQyE1b32bE&q=${name} ${location}`;
 
-    const fetchRes = await fetch(UNSPLASH_URL);
-    const data = await fetchRes.json();
-    dest.photo = data.urls.small;
-  } catch (error) {
-    dest.photo =
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80";
-  }
+  //   const fetchRes = await fetch(UNSPLASH_URL);
+  //   const data = await fetchRes.json();
+  //   dest.photo = data.urls.small;
+  // } catch (error) {
+  //   dest.photo =
+  //     "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80";
+  // }
 
   if (description && description.length !== 0) {
     dest.description = description;
@@ -60,8 +59,8 @@ server.get("/destinations", (req, res) => {
 });
 
 // PUT => edit a destination
-server.put("/destinations/", (req, res) => {
-  const { id, name, location, photo, description } = req.body;
+server.put("/destinations/", async (req, res) => {
+  const { id, name, location, description } = req.body;
 
   if (id === undefined) {
     return res.status(400).json({ message: "id is required" });
@@ -85,8 +84,8 @@ server.put("/destinations/", (req, res) => {
         dest.location = location;
       }
 
-      if (photo !== undefined) {
-        dest.photo = photo;
+      if (name !== undefined || location !== undefined) {
+        dest.photo = await getUnsplahPhoto({name: dest.name, location: dest.location});
       }
 
       if (description !== undefined) {
@@ -109,5 +108,5 @@ server.delete("/destinations/:id", (req, res) => {
 
   destinations = newDestinations;
 
-  res.redirect("/destinations");
+  res.redirect(303, "/destinations");
 });
